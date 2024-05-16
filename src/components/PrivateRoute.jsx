@@ -1,19 +1,27 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_BASE_URL } from "../../config.js";
+
+import Cookies from "js-cookie";
+
 function PrivateRoute({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("PrivateRoute useEffect");
     const checkAuth = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:5000/user_infos", {
+        const csrfToken = Cookies.get("csrf_access_token");
+        console.log("test");
+        console.log(csrfToken);
+        const response = await axios.get(`${API_BASE_URL}/user_infos`, {
           withCredentials: true,
+          headers: {
+            "X-CSRF-TOKEN": csrfToken,
+          },
         });
+        console.log(csrfToken);
         console.log(response);
-        setIsAuthenticated(true);
       } catch (error) {
         console.error(error); // Log the error
         navigate("/login"); // Navigate to login page on error
@@ -21,18 +29,7 @@ function PrivateRoute({ children }) {
     };
 
     checkAuth();
-  }, []);
-
-  useEffect(() => {
-    if (isAuthenticated === false) {
-      navigate("/login");
-    }
-  }, [isAuthenticated, navigate]);
-
-  // Don't render children until the authentication check is complete
-  if (isAuthenticated === null) {
-    return null;
-  }
+  }, [navigate]);
 
   return children;
 }
