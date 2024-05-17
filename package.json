@@ -29,7 +29,7 @@
   },
   "devDependencies": {},
   "engines": {
-    "node": "v22.1.0",
+    "node": "22.1.0",
     "npm": "10.7.0"
   }
 }
