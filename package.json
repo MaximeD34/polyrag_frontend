@@ -27,5 +27,9 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.3"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "engine": {
+    "node": "22.1.0",
+    "npm": "10.7.0"
+  }
 }
