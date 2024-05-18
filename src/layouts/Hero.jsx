@@ -45,7 +45,7 @@ const MainLayout = () => {
                 })}
                 <li>
                   <a
-                    href="javascript:void(0)"
+                    href="/dashboard"
                     className="flex items-center justify-center gap-x-1 py-2 px-4 text-white font-medium bg-sky-500 hover:bg-sky-400 active:bg-sky-600 duration-150 rounded-full md:inline-flex"
                   >
                     Get started

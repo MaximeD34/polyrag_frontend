@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import AvatarMenue from "./AvatarMenue";
 
-function TabsLayout() {
+function TabsLayout({ email, username }) {
   const [state, setState] = useState(false);
 
   // Replace javascript:void(0) paths with your paths
-  const navigation = [{ title: "Pro version", path: "javascript:void(0)" }];
+  // const navigation = [{ title: "Pro version", path: "javascript:void(0)" }];
 
   const submenuNav = [
     { title: "Overview", path: "javascript:void(0)" },
@@ -76,7 +76,13 @@ function TabsLayout() {
             <ul className="items-center space-y-6 lg:flex lg:space-x-6 lg:space-y-0">
               <div className="flex-1 items-center justify-start pb-4 lg:flex lg:pb-0"></div>
 
-              {navigation.map((item, idx) => {
+              <h1>
+                Welcome{" "}
+                <strong>
+                  <em>{username}</em>
+                </strong>
+              </h1>
+              {/* {navigation.map((item, idx) => {
                 return (
                   <li key={idx}>
                     <a
@@ -87,7 +93,7 @@ function TabsLayout() {
                     </a>
                   </li>
                 );
-              })}
+              })} */}
               <AvatarMenue />
             </ul>
           </div>

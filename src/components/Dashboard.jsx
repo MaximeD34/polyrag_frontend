@@ -3,11 +3,12 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../config.js";
 import TabsLayout from "../layouts/TabsLayout.jsx";
+import Loading from "./Loading.jsx";
 
 import Cookies from "js-cookie";
 
 function Dashboard() {
-  const [data, setData] = useState(null);
+  const [data_user, setData_user] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,7 +23,8 @@ function Dashboard() {
             "X-CSRF-TOKEN": csrfToken,
           },
         });
-        setData(response.data);
+        setData_user(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error(error); // Log the error
         navigate("/login"); // Navigate to login page on error
@@ -32,13 +34,16 @@ function Dashboard() {
     fetchData();
   }, [navigate]);
 
-  if (!data) {
-    return <div>Loading...</div>;
+  if (!data_user) {
+    return <Loading />;
   }
+
+  const { email, username } = data_user;
+  console.log(email, username);
 
   return (
     <div>
-      <TabsLayout />
+      <TabsLayout email={email} username={username} />
     </div>
   );
 }
