@@ -1,15 +1,16 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Avtar with darpdown menu
 const AvatarMenue = () => {
   const [state, setState] = useState(false);
   const profileRef = useRef();
+  const navigate = useNavigate();
 
   const navigation = [
-    { title: "Dashboard", path: "javascript:void(0)" },
-    { title: "Analytics", path: "javascript:void(0)" },
-    { title: "Profile", path: "javascript:void(0)" },
-    { title: "Settings", path: "javascript:void(0)" },
+    { title: "Dashboard", path: "/dashboard" },
+    { title: "Analytics", path: "/analytics" },
+    { title: "Profile", path: "/profile" },
   ];
 
   useEffect(() => {
@@ -48,7 +49,10 @@ const AvatarMenue = () => {
             </a>
           </li>
         ))}
-        <button className="block w-full text-justify text-gray-600 hover:text-gray-900 border-t py-3 lg:hover:bg-gray-50 lg:p-3">
+        <button
+          onClick={() => navigate("/logout")}
+          className="block w-full text-justify text-gray-600 hover:text-gray-900 border-t py-3 lg:hover:bg-gray-50 lg:p-3"
+        >
           Logout
         </button>
       </ul>

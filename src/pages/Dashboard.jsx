@@ -3,7 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../config.js";
 import TabsLayout from "../layouts/TabsLayout.jsx";
-import Loading from "./Loading.jsx";
+import Loading from "../components/Loading.jsx";
+import Header from "../layouts/Header.jsx";
 
 import Cookies from "js-cookie";
 
@@ -14,8 +15,6 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       const csrfToken = Cookies.get("csrf_access_token");
-      console.log("test");
-      console.log(csrfToken);
       try {
         const response = await axios.get(`${API_BASE_URL}/user_infos`, {
           withCredentials: true,
@@ -43,6 +42,7 @@ function Dashboard() {
 
   return (
     <div>
+      <Header username={username} />
       <TabsLayout email={email} username={username} />
     </div>
   );

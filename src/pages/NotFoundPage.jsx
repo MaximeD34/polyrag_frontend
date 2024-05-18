@@ -20,12 +20,6 @@ const NotFoundPage = () => {
             className="text-indigo-600 duration-150 hover:text-indigo-400 font-medium inline-flex items-center gap-x-1"
           >
             Go back
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-5 h-5"
-            ></svg>
           </button>
         </div>
       </div>
