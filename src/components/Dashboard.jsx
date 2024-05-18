@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../config.js";
+import TabsLayout from "../layouts/TabsLayout.jsx";
 
 import Cookies from "js-cookie";
 
@@ -37,8 +38,7 @@ function Dashboard() {
 
   return (
     <div>
-      <h1>Welcome, {data.username}!</h1>
-      <p>Your email is {data.email}</p>
+      <TabsLayout />
     </div>
   );
 }

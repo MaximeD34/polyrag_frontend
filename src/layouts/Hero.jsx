@@ -81,13 +81,13 @@ const MainLayout = () => {
               onSubmit={(e) => e.preventDefault()}
               className="justify-center items-center gap-x-3 sm:flex"
             >
-              <input
+              {/* <input
                 type="text"
                 placeholder="Enter your email"
                 className="w-full px-3 py-2.5 text-gray-400 bg-gray-700 focus:bg-gray-900 duration-150 outline-none rounded-lg shadow sm:max-w-sm sm:w-auto"
-              />
+              /> */}
               <button
-                className="flex items-center justify-center gap-x-2 py-2.5 px-4 mt-3 w-full text-sm text-white font-medium bg-sky-500 hover:bg-sky-400 active:bg-sky-600 duration-150 rounded-lg sm:mt-0 sm:w-auto"
+                className="flex items-center justify-center gap-x-2 py-2.5 px-20 mt-3 w-full text-sm text-white font-medium bg-sky-500 hover:bg-sky-400 active:bg-sky-600 duration-150 rounded-lg sm:mt-0 sm:w-auto"
                 onClick={() => navigate("/dashboard")}
               >
                 Get started

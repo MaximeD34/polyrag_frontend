@@ -13,12 +13,12 @@ const FeatureSelection = () => {
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
+            d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3"
           />
         </svg>
       ),
-      title: "Fast Refresh",
-      desc: "PolyRag uses efficient retrieval to quickly query your documents",
+      title: "Add your own files",
+      desc: "Import your own documents easily and start querying them",
     },
     {
       icon: (
@@ -33,12 +33,12 @@ const FeatureSelection = () => {
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3"
+            d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
           />
         </svg>
       ),
-      title: "Add your own files",
-      desc: "Import your own documents easily and start querying them",
+      title: "Fast query",
+      desc: "PolyRag uses efficient retrieval to quickly query your documents",
     },
     {
       icon: (
@@ -67,11 +67,11 @@ const FeatureSelection = () => {
       <div className="max-w-screen-xl mx-auto px-4 text-center text-gray-600 md:px-8">
         <div className="max-w-2xl mx-auto">
           <h3 className="text-gray-800 text-3xl font-semibold sm:text-4xl">
-            The fastest way to launch a product
+            The best way to talk with your documents.
           </h3>
           <p className="mt-3">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-            congue, nisl eget molestie varius, enim ex faucibus purus.
+            Ask your questions to GPT-3.5 and get personalized answers based on
+            your documents.
           </p>
         </div>
         <div className="mt-12">
