@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 function Dashboard() {
   const [data_user, setData_user] = useState(null);
   const navigate = useNavigate();
+  const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +24,6 @@ function Dashboard() {
           },
         });
         setData_user(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error); // Log the error
         navigate("/login"); // Navigate to login page on error
@@ -38,12 +38,19 @@ function Dashboard() {
   }
 
   const { email, username } = data_user;
-  console.log(email, username);
 
   return (
     <div>
-      <Header username={username} />
-      <TabsLayout email={email} username={username} />
+      <Header
+        username={username}
+        avatarMenuOpen={avatarMenuOpen}
+        setAvatarMenuOpen={setAvatarMenuOpen}
+      />
+      <TabsLayout
+        email={email}
+        username={username}
+        avatarMenuOpen={avatarMenuOpen}
+      />
     </div>
   );
 }

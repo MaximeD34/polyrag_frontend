@@ -1,7 +1,7 @@
 import AvatarMenue from "./AvatarMenue";
 import { useState } from "react";
 
-function Header({ username }) {
+function Header({ username, avatarMenuOpen, setAvatarMenuOpen }) {
   const [state, setState] = useState(false);
   return (
     <div
@@ -21,7 +21,7 @@ function Header({ username }) {
         <div className="lg:hidden">
           <button
             className="text-gray-500 hover:text-gray-800"
-            onClick={() => setState(!state)}
+            onClick={() => (setState(!state), setAvatarMenuOpen(!state))}
           >
             {state ? (
               <svg
@@ -67,7 +67,10 @@ function Header({ username }) {
               <em>{username}</em>
             </strong>
           </h1>
-          <AvatarMenue />
+          <AvatarMenue
+            avatarMenuOpen={avatarMenuOpen}
+            setAvatarMenuOpen={setAvatarMenuOpen}
+          />
         </ul>
       </div>
     </div>

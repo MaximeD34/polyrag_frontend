@@ -12,16 +12,12 @@ function PrivateRoute({ children }) {
     const checkAuth = async () => {
       try {
         const csrfToken = Cookies.get("csrf_access_token");
-        console.log("test");
-        console.log(csrfToken);
         const response = await axios.get(`${API_BASE_URL}/user_infos`, {
           withCredentials: true,
           headers: {
             "X-CSRF-TOKEN": csrfToken,
           },
         });
-        console.log(csrfToken);
-        console.log(response);
       } catch (error) {
         console.error(error); // Log the error
         navigate("/login"); // Navigate to login page on error

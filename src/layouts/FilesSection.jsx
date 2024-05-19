@@ -5,8 +5,21 @@ function FilesSection({
   selectedFileIds,
   setSelectedFileIds,
   isPublicMode,
+  avatarMenuOpen,
 }) {
-  //   const [selectedFileIds, setSelectedFileIds] = useState([]);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+
+    // Clean up function
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const isLargeScreen = windowWidth >= 1024; // Tailwind's lg breakpoint
 
   const handleCheckboxChange = (e, file) => {
     if (e.target.checked) {
@@ -57,18 +70,22 @@ function FilesSection({
           <thead className="text-gray-600 font-medium border-b">
             <tr>
               <th className="py-3 px-6 flex items-center gap-x-4">
-                <div>
-                  <input
-                    type="checkbox"
-                    id="checkbox-all-items"
-                    className="checkbox-item peer hidden"
-                    checked={areAllChecked}
-                    onChange={handleSelectAll}
-                  />
-                  <label
-                    htmlFor="checkbox-all-items"
-                    className="relative flex w-5 h-5 bg-white peer-checked:bg-indigo-600 rounded-md border ring-offset-2 ring-indigo-600 duration-150 peer-active:ring cursor-pointer after:absolute after:inset-x-0 after:top-[3px] after:m-auto after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:rotate-45"
-                  ></label>
+                <div className="z-10">
+                  {(!avatarMenuOpen || isLargeScreen) && (
+                    <>
+                      <input
+                        type="checkbox"
+                        id="checkbox-all-items"
+                        className="checkbox-item peer hidden"
+                        checked={areAllChecked}
+                        onChange={handleSelectAll}
+                      />
+                      <label
+                        htmlFor="checkbox-all-items"
+                        className="z-10 relative flex w-5 h-5 bg-white peer-checked:bg-indigo-600 rounded-md border ring-offset-2 ring-indigo-600 duration-150 peer-active:ring cursor-pointer after:absolute after:inset-x-0 after:top-[3px] after:m-auto after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:rotate-45"
+                      ></label>
+                    </>
+                  )}
                 </div>
                 Username
               </th>
@@ -82,18 +99,22 @@ function FilesSection({
               <tr key={idx} className="odd:bg-gray-50 even:bg-white">
                 <td className="px-6 py-4 whitespace-nowrap flex items-center gap-x-4">
                   <div>
-                    <input
-                      type="checkbox"
-                      id={`checkbox-${idx}`}
-                      name={`checkbox-${idx}`}
-                      className="checkbox-item peer hidden"
-                      checked={selectedFileIds.includes(item.id)}
-                      onChange={(e) => handleCheckboxChange(e, item)}
-                    />
-                    <label
-                      htmlFor={`checkbox-${idx}`}
-                      className="relative flex w-5 h-5 bg-white peer-checked:bg-indigo-600 rounded-md border ring-offset-2 ring-indigo-600 duration-150 peer-active:ring cursor-pointer after:absolute after:inset-x-0 after:top-[3px] after:m-auto after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:rotate-45"
-                    ></label>
+                    {(!avatarMenuOpen || isLargeScreen) && (
+                      <>
+                        <input
+                          type="checkbox"
+                          id={`checkbox-${idx}`}
+                          name={`checkbox-${idx}`}
+                          className="z-10 checkbox-item peer hidden"
+                          checked={selectedFileIds.includes(item.id)}
+                          onChange={(e) => handleCheckboxChange(e, item)}
+                        />
+                        <label
+                          htmlFor={`checkbox-${idx}`}
+                          className="relative flex w-5 h-5 bg-white peer-checked:bg-indigo-600 rounded-md border ring-offset-2 ring-indigo-600 duration-150 peer-active:ring cursor-pointer after:absolute after:inset-x-0 after:top-[3px] after:m-auto after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:rotate-45"
+                        ></label>
+                      </>
+                    )}
                   </div>
                   {item.file_name}
                 </td>

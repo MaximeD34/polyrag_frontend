@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../config.js";
 
-function TabsLayout({ email, username }) {
+function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
   // Replace javascript:void(0) paths with your paths
   // const navigation = [{ title: "Pro version", path: "javascript:void(0)" }];
 
@@ -67,9 +67,9 @@ function TabsLayout({ email, username }) {
   const [selectedSubmenu, setSelectedSubmenu] = useState(submenuNav[0].title);
   const [selectedFileIds, setSelectedFileIds] = useState([]);
 
-  console.log(selectedFileIds);
-  console.log(data_files);
-  console.log(public_data_files);
+  console.log("selected files: ", selectedFileIds);
+  console.log("data_files : ", data_files);
+  console.log("public_data_files : ", public_data_files);
 
   return (
     <>
@@ -107,6 +107,7 @@ function TabsLayout({ email, username }) {
           selectedFileIds={selectedFileIds}
           setSelectedFileIds={setSelectedFileIds}
           isPublicMode={false}
+          avatarMenuOpen={avatarMenuOpen}
         />
       )}
       {selectedSubmenu === "Community" && (
@@ -115,6 +116,7 @@ function TabsLayout({ email, username }) {
           selectedFileIds={selectedFileIds}
           setSelectedFileIds={setSelectedFileIds}
           isPublicMode={true}
+          avatarMenuOpen={avatarMenuOpen}
         />
       )}
     </>
