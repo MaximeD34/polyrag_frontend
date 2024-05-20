@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import AddFileModal from "../components/AddFileModal";
+import DeleteFileModal from "../components/DeleteFileModal";
 
 function FilesSection({
   fileList,
@@ -10,7 +11,10 @@ function FilesSection({
 }) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [file_to_delete, setFileToDelete] = useState(null);
+  const [file_name_to_delete, setFileNameToDelete] = useState(null);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -60,7 +64,7 @@ function FilesSection({
         {!isPublicMode && (
           <div className="mt-3 md:mt-0">
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsAddModalOpen(true)}
               className="inline-block px-4 py-2 text-white duration-150 font-medium bg-indigo-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700 md:text-sm"
             >
               Add file
@@ -70,7 +74,14 @@ function FilesSection({
       </div>
 
       {/* Modal */}
-      {isModalOpen && <AddFileModal setIsModalOpen={setIsModalOpen} />}
+      {isAddModalOpen && <AddFileModal setIsAddModalOpen={setIsAddModalOpen} />}
+      {isDeleteModalOpen && (
+        <DeleteFileModal
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          file_id={file_to_delete}
+          file_name={file_name_to_delete}
+        />
+      )}
 
       <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
         <table className="w-full table-auto text-sm text-left">
@@ -142,6 +153,11 @@ function FilesSection({
                       <button
                         href="javascript:void()"
                         className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
+                        onClick={() => (
+                          setFileToDelete(item.id),
+                          setFileNameToDelete(item.file_name),
+                          setIsDeleteModalOpen(true)
+                        )}
                       >
                         Delete
                       </button>
