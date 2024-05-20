@@ -7,30 +7,7 @@ import { API_BASE_URL } from "../../config";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const refreshToken = async () => {
-  try {
-    const csrfToken_refresh = Cookies.get("csrf_refresh_token");
-    const response = await axios.post(
-      `${API_BASE_URL}/refresh`,
-      {},
-      {
-        withCredentials: true,
-        headers: {
-          "X-CSRF-TOKEN": csrfToken_refresh,
-        },
-      }
-    );
-    if (response.status === 200) {
-      const csrfToken = Cookies.get("csrf_access_token");
-
-      return csrfToken;
-    }
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-};
+import refreshToken from "../logic/Refresh";
 
 function AddFileModal(
   { setIsModalOpen } // Destructuring the props object
@@ -44,6 +21,16 @@ function AddFileModal(
   };
 
   const handleAddFile = async () => {
+    toast.loading("Adding file...", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
     const formData = new FormData();
     formData.append("file", file);
     formData.append("is_public", isPublic);
@@ -59,7 +46,8 @@ function AddFileModal(
       setIsModalOpen(false);
 
       if (response.status === 200) {
-        navigate("/dashboard");
+        toast.dismiss();
+        window.location.reload();
         toast.success("File added successfully", {
           position: "top-right",
           autoClose: 5000,
@@ -74,7 +62,10 @@ function AddFileModal(
       console.error(error); // Log the error
 
       if (error.response && error.response.status === 400) {
-        toast.error("Invalid request", {
+        toast.dismiss();
+        const error_to_display = error.response.data.error;
+        console.log(error_to_display);
+        toast.error(error_to_display, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -115,8 +106,6 @@ function AddFileModal(
           progress: undefined,
         });
       }
-
-      navigate("/dashboard");
     }
   };
 
