@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import AddFileModal from "../components/AddFileModal";
 import DeleteFileModal from "../components/DeleteFileModal";
+import UpdateFileModal from "../components/UpdateFileModal";
 
 function FilesSection({
   fileList,
@@ -13,8 +14,14 @@ function FilesSection({
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+
   const [file_to_delete, setFileToDelete] = useState(null);
   const [file_name_to_delete, setFileNameToDelete] = useState(null);
+
+  const [file_to_update, setFileToUpdate] = useState(null);
+  const [file_name_to_update, setFileNameToUpdate] = useState(null);
+  const [file_is_public_to_update, setFileIsPublicToUpdate] = useState(null);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -82,6 +89,14 @@ function FilesSection({
           file_name={file_name_to_delete}
         />
       )}
+      {isUpdateModalOpen && (
+        <UpdateFileModal
+          setIsUpdateModalOpen={setIsUpdateModalOpen}
+          file_id={file_to_update}
+          file_name={file_name_to_update}
+          is_public={file_is_public_to_update}
+        />
+      )}
 
       <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
         <table className="w-full table-auto text-sm text-left">
@@ -144,12 +159,18 @@ function FilesSection({
                 <td className="text-right px-6 whitespace-nowrap">
                   {!isPublicMode && (
                     <>
-                      <a
+                      <button
                         href="javascript:void()"
                         className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
+                        onClick={() => (
+                          setFileToUpdate(item.id),
+                          setFileNameToUpdate(item.file_name),
+                          setFileIsPublicToUpdate(item.is_public),
+                          setIsUpdateModalOpen(true)
+                        )}
                       >
                         Edit {item.id}
-                      </a>
+                      </button>
                       <button
                         href="javascript:void()"
                         className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
