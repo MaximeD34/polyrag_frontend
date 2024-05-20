@@ -94,7 +94,7 @@ function FilesSection({
           setIsUpdateModalOpen={setIsUpdateModalOpen}
           file_id={file_to_update}
           file_name={file_name_to_update}
-          is_public={file_is_public_to_update}
+          file_is_public={file_is_public_to_update}
         />
       )}
 
@@ -128,65 +128,67 @@ function FilesSection({
             </tr>
           </thead>
           <tbody className="text-gray-600 divide-y">
-            {fileList.map((item, idx) => (
-              <tr key={idx} className="odd:bg-gray-50 even:bg-white">
-                <td className="px-6 py-4 whitespace-nowrap flex items-center gap-x-4">
-                  <div>
-                    {(!avatarMenuOpen || isLargeScreen) && (
+            {fileList
+              .sort((a, b) => a.id - b.id)
+              .map((item, idx) => (
+                <tr key={idx} className="odd:bg-gray-50 even:bg-white">
+                  <td className="px-6 py-4 whitespace-nowrap flex items-center gap-x-4">
+                    <div>
+                      {(!avatarMenuOpen || isLargeScreen) && (
+                        <>
+                          <input
+                            type="checkbox"
+                            id={`checkbox-${idx}`}
+                            name={`checkbox-${idx}`}
+                            className="z-10 checkbox-item peer hidden"
+                            checked={selectedFileIds.includes(item.id)}
+                            onChange={(e) => handleCheckboxChange(e, item)}
+                          />
+                          <label
+                            htmlFor={`checkbox-${idx}`}
+                            className="relative flex w-5 h-5 bg-white peer-checked:bg-indigo-600 rounded-md border ring-offset-2 ring-indigo-600 duration-150 peer-active:ring cursor-pointer after:absolute after:inset-x-0 after:top-[3px] after:m-auto after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:rotate-45"
+                          ></label>
+                        </>
+                      )}
+                    </div>
+                    {item.file_name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {item.is_public ? "Oui" : "Non"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">{item.author}</td>
+
+                  <td className="text-right px-6 whitespace-nowrap">
+                    {!isPublicMode && (
                       <>
-                        <input
-                          type="checkbox"
-                          id={`checkbox-${idx}`}
-                          name={`checkbox-${idx}`}
-                          className="z-10 checkbox-item peer hidden"
-                          checked={selectedFileIds.includes(item.id)}
-                          onChange={(e) => handleCheckboxChange(e, item)}
-                        />
-                        <label
-                          htmlFor={`checkbox-${idx}`}
-                          className="relative flex w-5 h-5 bg-white peer-checked:bg-indigo-600 rounded-md border ring-offset-2 ring-indigo-600 duration-150 peer-active:ring cursor-pointer after:absolute after:inset-x-0 after:top-[3px] after:m-auto after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:rotate-45"
-                        ></label>
+                        <button
+                          href="javascript:void()"
+                          className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
+                          onClick={() => (
+                            setFileToUpdate(item.id),
+                            setFileNameToUpdate(item.file_name),
+                            setFileIsPublicToUpdate(item.is_public),
+                            setIsUpdateModalOpen(true)
+                          )}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          href="javascript:void()"
+                          className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
+                          onClick={() => (
+                            setFileToDelete(item.id),
+                            setFileNameToDelete(item.file_name),
+                            setIsDeleteModalOpen(true)
+                          )}
+                        >
+                          Delete
+                        </button>
                       </>
                     )}
-                  </div>
-                  {item.file_name}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  {item.is_public ? "Oui" : "Non"}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">{item.author}</td>
-
-                <td className="text-right px-6 whitespace-nowrap">
-                  {!isPublicMode && (
-                    <>
-                      <button
-                        href="javascript:void()"
-                        className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
-                        onClick={() => (
-                          setFileToUpdate(item.id),
-                          setFileNameToUpdate(item.file_name),
-                          setFileIsPublicToUpdate(item.is_public),
-                          setIsUpdateModalOpen(true)
-                        )}
-                      >
-                        Edit {item.id}
-                      </button>
-                      <button
-                        href="javascript:void()"
-                        className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
-                        onClick={() => (
-                          setFileToDelete(item.id),
-                          setFileNameToDelete(item.file_name),
-                          setIsDeleteModalOpen(true)
-                        )}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

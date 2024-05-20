@@ -125,7 +125,9 @@ function DeleteFileModal(
         <div className="mb-4">
           <h3>
             <label className="mb-4 block text-sm font-medium text-gray-700">
-              Are you sure you want to delete the file <i>{file_name}</i> ?
+              Are you sure you want to delete the file
+              <br />
+              <i>{file_name}</i> ?
             </label>
           </h3>
         </div>
