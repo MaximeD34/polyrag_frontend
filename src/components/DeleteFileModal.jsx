@@ -7,7 +7,7 @@ import axios from "axios";
 import refreshToken from "../logic/Refresh";
 
 function DeleteFileModal(
-  { setIsDeleteModalOpen, file_id, file_name } // Destructuring the props object
+  { setIsDeleteModalOpen, file_id, file_name, refreshPrivateFiles } // Destructuring the props object
 ) {
   const handleFileDeletion = async () => {
     console.log("Deleting file...");
@@ -33,7 +33,7 @@ function DeleteFileModal(
 
       if (response.status === 200) {
         toast.dismiss();
-        window.location.reload();
+        refreshPrivateFiles();
         toast.success("File deleted successfully", {
           position: "top-right",
           autoClose: 5000,
@@ -61,13 +61,12 @@ function DeleteFileModal(
           progress: undefined,
         });
       } else if (error.response && error.response.status === 404) {
-        window.location.reload();
+        refreshPrivateFiles();
       } else if (error.response && error.response.status === 401) {
         const csrfToken = await refreshToken();
         if (csrfToken) {
           handleFileDeletion();
-
-          window.location.reload();
+          refreshPrivateFiles();
         } else {
           toast.error(
             "An error occurred with your identification. Please try again later.",

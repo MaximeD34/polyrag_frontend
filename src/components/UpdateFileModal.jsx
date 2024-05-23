@@ -9,7 +9,13 @@ import { useState } from "react";
 import CheckboxComponent from "./CheckboxComponent";
 
 function UpdateFileModal(
-  { setIsUpdateModalOpen, file_id, file_name, file_is_public } // Destructuring the props object
+  {
+    setIsUpdateModalOpen,
+    file_id,
+    file_name,
+    file_is_public,
+    refreshPrivateFiles,
+  } // Destructuring the props object
 ) {
   const [new_file_name, setNew_file_name] = useState(file_name);
   const [new_file_is_public, setNew_file_is_public] = useState(file_is_public);
@@ -45,7 +51,7 @@ function UpdateFileModal(
 
       if (response.status === 200) {
         toast.dismiss();
-        window.location.reload();
+        refreshPrivateFiles();
         toast.success("File updated successfully", {
           position: "top-right",
           autoClose: 5000,
@@ -73,13 +79,13 @@ function UpdateFileModal(
           progress: undefined,
         });
       } else if (error.response && error.response.status === 404) {
-        window.location.reload();
+        refreshPrivateFiles();
       } else if (error.response && error.response.status === 401) {
         const csrfToken = await refreshToken();
         if (csrfToken) {
           handleFileUpdate();
 
-          window.location.reload();
+          refreshPrivateFiles();
         } else {
           toast.error(
             "An error occurred with your identification. Please try again later.",
@@ -163,6 +169,7 @@ function UpdateFileModal(
         <button
           className="mt-4 block w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg cursor-pointer hover:bg-blue-500 focus:outline-none focus:bg-blue-700"
           onClick={handleFileUpdate}
+          type="submit"
         >
           Update File
         </button>

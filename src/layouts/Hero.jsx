@@ -5,10 +5,7 @@ const MainLayout = () => {
   // Inside your component
   const navigate = useNavigate();
 
-  const navigation = [
-    { title: "Test", path: "javascript:void(0)" },
-    { title: "Integrations", path: "javascript:void(0)" },
-  ];
+  const navigation = [];
 
   const Brand = () => (
     <div className="flex items-center justify-between py-5 md:block">

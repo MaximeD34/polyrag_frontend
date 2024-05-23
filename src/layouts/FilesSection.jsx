@@ -1,17 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useContext, useEffect } from "react";
 import AddFileModal from "../components/AddFileModal";
 import DeleteFileModal from "../components/DeleteFileModal";
 import UpdateFileModal from "../components/UpdateFileModal";
-import io from "socket.io-client";
+import { useState } from "react";
+import { SocketContext } from "../App";
 
 function FilesSection({
-  fileList,
-  selectedFileIds,
+  fileList, // List of the file to display in the table of this component
+  selectedFileIds, // List of the selected file IDs so the component can communicate them
   setSelectedFileIds,
-  isPublicMode,
-  avatarMenuOpen,
-  refreshPrivateFiles,
-  private_files_status,
+  isPublicMode, // Boolean to determine if the tables show public or private files (just for display purposes)
+  avatarMenuOpen, // Boolean to determine if the avatar menu is open or not.
+  refreshFiles, // Function to refresh the list of private files by calling the API
+  files_status, // List of the status of the files
 }) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -27,6 +28,37 @@ function FilesSection({
   const [file_is_public_to_update, setFileIsPublicToUpdate] = useState(null);
 
   const [status, setStatus] = useState(null);
+  const socket = useContext(SocketContext);
+
+  useEffect(() => {
+    console.log("useEffect ran", socket);
+    console.log(socket);
+
+    if (socket) {
+      console.log("Setting up listener");
+      socket.on("embedding_status", (newStatus) => {
+        console.log("AAAAAAAAAAA");
+        setStatus(newStatus);
+      });
+
+      return () => {
+        console.log("Cleaning up listener");
+        socket.off("statusUpdate");
+      };
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (status && fileList) {
+      const fileListIds = fileList.map((file) => file.id);
+
+      const isStatusFileInFileList = fileListIds.includes(status.file_id);
+
+      if (!isStatusFileInFileList) {
+        refreshFiles();
+      }
+    }
+  }, [status, fileList, refreshFiles]);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -56,20 +88,13 @@ function FilesSection({
     }
   };
 
+  console.log("status:", status);
+
   const areAllChecked =
     fileList.length > 0 && selectedFileIds.length === fileList.length;
 
-  const socket = io("http://localhost:5000");
-
-  socket.on("embedding_status", function (data) {
-    setStatus(data);
-  });
-
-  console.log("status", status);
-
   return (
     <div className="max-w-screen-xl mx-auto px-4 md:px-8 pt-7 mb-12">
-      Test
       <div className="items-start justify-between md:flex">
         <div className="max-w-lg">
           <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
@@ -97,7 +122,7 @@ function FilesSection({
       {isAddModalOpen && (
         <AddFileModal
           setIsAddModalOpen={setIsAddModalOpen}
-          refreshPrivateFiles={refreshPrivateFiles}
+          refreshPrivateFiles={refreshFiles}
         />
       )}
       {isDeleteModalOpen && (
@@ -105,6 +130,7 @@ function FilesSection({
           setIsDeleteModalOpen={setIsDeleteModalOpen}
           file_id={file_to_delete}
           file_name={file_name_to_delete}
+          refreshPrivateFiles={refreshFiles}
         />
       )}
       {isUpdateModalOpen && (
@@ -113,6 +139,7 @@ function FilesSection({
           file_id={file_to_update}
           file_name={file_name_to_update}
           file_is_public={file_is_public_to_update}
+          refreshPrivateFiles={refreshFiles}
         />
       )}
       <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
@@ -172,7 +199,7 @@ function FilesSection({
                     {item.file_name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {item.is_public ? "Oui" : "Non"}
+                    {item.is_public ? "Oui" : "Non"} {item.id}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.author}</td>
 
@@ -182,7 +209,7 @@ function FilesSection({
                       //if status is not null, print the status of the file if it is
                       //in the status object, else print "Done"
                       (() => {
-                        const fileStatus = private_files_status.find(
+                        const fileStatus = files_status.find(
                           (s) => s.file_id === item.id
                         );
                         if (status === null) {

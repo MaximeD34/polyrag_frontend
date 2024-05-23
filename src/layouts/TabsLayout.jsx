@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from "react";
 import FilesSection from "./FilesSection";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../config.js";
+import React, { useContext, useEffect } from "react";
+import { useState } from "react";
 
 function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
   // Replace javascript:void(0) paths with your paths
@@ -20,6 +21,8 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
   const [data_files, setData_files] = useState(null);
   const [public_data_files, setPublic_data_files] = useState(null);
   const [private_files_init_status, setPrivate_files_init_status] =
+    useState(null);
+  const [public_files_init_status, setPublic_files_init_status] =
     useState(null);
 
   const refreshPrivateFiles = () => {
@@ -42,9 +45,34 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
     fetchData();
   };
 
+  const refreshPublicFiles = () => {
+    const fetchData = async () => {
+      const csrfToken = Cookies.get("csrf_access_token");
+      try {
+        const response = await axios.get(`${API_BASE_URL}/all_public_files`, {
+          withCredentials: true,
+          headers: {
+            "X-CSRF-TOKEN": csrfToken,
+          },
+        });
+        setPublic_data_files(response.data);
+      } catch (error) {
+        console.error(error); // Log the error
+        navigate("/login"); // Navigate to login page on error
+      }
+    };
+
+    fetchData();
+  };
+
   //get private files
   useEffect(() => {
     refreshPrivateFiles();
+  }, [navigate]);
+
+  //get public files
+  useEffect(() => {
+    refreshPublicFiles();
   }, [navigate]);
 
   //get public files
@@ -85,6 +113,29 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
           }
         );
         setPrivate_files_init_status(response.data);
+      } catch (error) {
+        console.error(error); // Log the error
+        navigate("/login"); // Navigate to login page on error
+      }
+    };
+    fetchData();
+  }, [navigate]);
+
+  //get public files status
+  useEffect(() => {
+    const fetchData = async () => {
+      const csrfToken = Cookies.get("csrf_access_token");
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/public_files_status`,
+          {
+            withCredentials: true,
+            headers: {
+              "X-CSRF-TOKEN": csrfToken,
+            },
+          }
+        );
+        setPublic_files_init_status(response.data);
       } catch (error) {
         console.error(error); // Log the error
         navigate("/login"); // Navigate to login page on error
@@ -137,8 +188,8 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
           setSelectedFileIds={setSelectedFileIds}
           isPublicMode={false}
           avatarMenuOpen={avatarMenuOpen}
-          refreshPrivateFiles={refreshPrivateFiles}
-          private_files_status={private_files_init_status}
+          refreshFiles={refreshPrivateFiles}
+          files_status={private_files_init_status}
         />
       )}
       {selectedSubmenu === "Community" && (
@@ -148,6 +199,8 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
           setSelectedFileIds={setSelectedFileIds}
           isPublicMode={true}
           avatarMenuOpen={avatarMenuOpen}
+          refreshFiles={refreshPublicFiles}
+          files_status={public_files_init_status}
         />
       )}
     </>
