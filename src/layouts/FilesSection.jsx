@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import AddFileModal from "../components/AddFileModal";
 import DeleteFileModal from "../components/DeleteFileModal";
 import UpdateFileModal from "../components/UpdateFileModal";
+import io from "socket.io-client";
 
 function FilesSection({
   fileList,
@@ -9,6 +10,8 @@ function FilesSection({
   setSelectedFileIds,
   isPublicMode,
   avatarMenuOpen,
+  refreshPrivateFiles,
+  private_files_status,
 }) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -22,6 +25,8 @@ function FilesSection({
   const [file_to_update, setFileToUpdate] = useState(null);
   const [file_name_to_update, setFileNameToUpdate] = useState(null);
   const [file_is_public_to_update, setFileIsPublicToUpdate] = useState(null);
+
+  const [status, setStatus] = useState(null);
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -54,8 +59,17 @@ function FilesSection({
   const areAllChecked =
     fileList.length > 0 && selectedFileIds.length === fileList.length;
 
+  const socket = io("http://localhost:5000");
+
+  socket.on("embedding_status", function (data) {
+    setStatus(data);
+  });
+
+  console.log("status", status);
+
   return (
     <div className="max-w-screen-xl mx-auto px-4 md:px-8 pt-7 mb-12">
+      Test
       <div className="items-start justify-between md:flex">
         <div className="max-w-lg">
           <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
@@ -79,9 +93,13 @@ function FilesSection({
           </div>
         )}
       </div>
-
       {/* Modal */}
-      {isAddModalOpen && <AddFileModal setIsAddModalOpen={setIsAddModalOpen} />}
+      {isAddModalOpen && (
+        <AddFileModal
+          setIsAddModalOpen={setIsAddModalOpen}
+          refreshPrivateFiles={refreshPrivateFiles}
+        />
+      )}
       {isDeleteModalOpen && (
         <DeleteFileModal
           setIsDeleteModalOpen={setIsDeleteModalOpen}
@@ -97,7 +115,6 @@ function FilesSection({
           file_is_public={file_is_public_to_update}
         />
       )}
-
       <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
         <table className="w-full table-auto text-sm text-left">
           <thead className="text-gray-600 font-medium border-b">
@@ -120,10 +137,11 @@ function FilesSection({
                     </>
                   )}
                 </div>
-                Username
+                File name
               </th>
               <th className="py-3 px-6">Publique ?</th>
               <th className="py-3 px-6">Author</th>
+              <th className="py-3 px-6">Status</th>
               <th className="py-3 px-6"></th>
             </tr>
           </thead>
@@ -157,6 +175,32 @@ function FilesSection({
                     {item.is_public ? "Oui" : "Non"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.author}</td>
+
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {
+                      //if status is null, print "Done" everywhere
+                      //if status is not null, print the status of the file if it is
+                      //in the status object, else print "Done"
+                      (() => {
+                        const fileStatus = private_files_status.find(
+                          (s) => s.file_id === item.id
+                        );
+                        if (status === null) {
+                          return fileStatus ? fileStatus.status : "Done";
+                        } else if (item.id === status.file_id) {
+                          if (status.status === "done") {
+                            return "Done";
+                          } else if (status.status === "error") {
+                            return "Error";
+                          } else if (status.status === "pending") {
+                            return "Pending";
+                          }
+                        } else {
+                          return fileStatus ? fileStatus.status : "Done";
+                        }
+                      })()
+                    }
+                  </td>
 
                   <td className="text-right px-6 whitespace-nowrap">
                     {!isPublicMode && (

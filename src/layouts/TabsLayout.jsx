@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-
-import Header from "./Header";
 import FilesSection from "./FilesSection";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -21,9 +19,10 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
 
   const [data_files, setData_files] = useState(null);
   const [public_data_files, setPublic_data_files] = useState(null);
+  const [private_files_init_status, setPrivate_files_init_status] =
+    useState(null);
 
-  //get private files
-  useEffect(() => {
+  const refreshPrivateFiles = () => {
     const fetchData = async () => {
       const csrfToken = Cookies.get("csrf_access_token");
       try {
@@ -41,9 +40,14 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
     };
 
     fetchData();
-  }, [navigate]);
+  };
 
   //get private files
+  useEffect(() => {
+    refreshPrivateFiles();
+  }, [navigate]);
+
+  //get public files
   useEffect(() => {
     const fetchData = async () => {
       const csrfToken = Cookies.get("csrf_access_token");
@@ -61,6 +65,31 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
       }
     };
 
+    fetchData();
+  }, [navigate]);
+
+  console.log("init status :", private_files_init_status);
+
+  //get private files status
+  useEffect(() => {
+    const fetchData = async () => {
+      const csrfToken = Cookies.get("csrf_access_token");
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/private_files_status`,
+          {
+            withCredentials: true,
+            headers: {
+              "X-CSRF-TOKEN": csrfToken,
+            },
+          }
+        );
+        setPrivate_files_init_status(response.data);
+      } catch (error) {
+        console.error(error); // Log the error
+        navigate("/login"); // Navigate to login page on error
+      }
+    };
     fetchData();
   }, [navigate]);
 
@@ -108,6 +137,8 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
           setSelectedFileIds={setSelectedFileIds}
           isPublicMode={false}
           avatarMenuOpen={avatarMenuOpen}
+          refreshPrivateFiles={refreshPrivateFiles}
+          private_files_status={private_files_init_status}
         />
       )}
       {selectedSubmenu === "Community" && (

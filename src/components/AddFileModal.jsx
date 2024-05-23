@@ -9,7 +9,7 @@ import axios from "axios";
 import refreshToken from "../logic/Refresh";
 
 function AddFileModal(
-  { setIsAddModalOpen } // Destructuring the props object
+  { setIsAddModalOpen, refreshPrivateFiles } // Destructuring the props object
 ) {
   const [file, setFile] = useState(null);
   const [isPublic, setIsPublic] = useState(false);
@@ -44,8 +44,6 @@ function AddFileModal(
       setIsAddModalOpen(false);
 
       if (response.status === 200) {
-        toast.dismiss();
-        window.location.reload();
         toast.success("File added successfully", {
           position: "top-right",
           autoClose: 5000,
@@ -55,6 +53,8 @@ function AddFileModal(
           draggable: true,
           progress: undefined,
         });
+
+        refreshPrivateFiles();
       }
     } catch (error) {
       console.error(error); // Log the error
@@ -77,8 +77,6 @@ function AddFileModal(
         console.log(csrfToken);
         if (csrfToken) {
           handleAddFile();
-
-          window.location.reload();
         } else {
           toast.error(
             "An error occurred with your identification. Please try again later.",
