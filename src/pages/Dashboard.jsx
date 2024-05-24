@@ -13,6 +13,7 @@ function Dashboard() {
   const navigate = useNavigate();
   const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
 
+
   useEffect(() => {
     const fetchData = async () => {
       const csrfToken = Cookies.get("csrf_access_token");

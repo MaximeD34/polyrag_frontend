@@ -9,6 +9,9 @@ export default {
       gridTemplateColumns: {
         "70/30": "70% 30%",
       },
+      borderWidth: {
+        1.5: "1.5px",
+      },
     },
   },
   plugins: [],

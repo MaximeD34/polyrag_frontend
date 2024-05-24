@@ -61,11 +61,13 @@ function DeleteFileModal(
           progress: undefined,
         });
       } else if (error.response && error.response.status === 404) {
+        refreshFilesStatus();
         refreshPrivateFiles();
       } else if (error.response && error.response.status === 401) {
         const csrfToken = await refreshToken();
         if (csrfToken) {
           handleFileDeletion();
+          refreshFilesStatus();
           refreshPrivateFiles();
         } else {
           toast.error(

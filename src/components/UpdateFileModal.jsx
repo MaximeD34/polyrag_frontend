@@ -84,7 +84,7 @@ function UpdateFileModal(
         const csrfToken = await refreshToken();
         if (csrfToken) {
           handleFileUpdate();
-
+          refreshFilesStatus();
           refreshPrivateFiles();
         } else {
           toast.error(

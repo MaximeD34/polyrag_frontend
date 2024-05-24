@@ -3,7 +3,7 @@ import AddFileModal from "../components/AddFileModal";
 import DeleteFileModal from "../components/DeleteFileModal";
 import UpdateFileModal from "../components/UpdateFileModal";
 import { useState } from "react";
-import { SocketContext } from "../App";
+// import { SocketContext } from "../App";
 
 function FilesSection({
   fileList, // List of the file to display in the table of this component
@@ -13,6 +13,7 @@ function FilesSection({
   avatarMenuOpen, // Boolean to determine if the avatar menu is open or not.
   refreshFiles, // Function to refresh the list of private files by calling the API
   files_status, // List of the status of the files
+  refreshFilesStatus, // Function to refresh the list of files status by calling the API
 }) {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -28,25 +29,25 @@ function FilesSection({
   const [file_is_public_to_update, setFileIsPublicToUpdate] = useState(null);
 
   const [status, setStatus] = useState(null);
-  const socket = useContext(SocketContext);
+  // const socket = useContext(SocketContext);
 
-  useEffect(() => {
-    console.log("useEffect ran", socket);
-    console.log(socket);
+  // useEffect(() => {
+  //   console.log("useEffect ran", socket);
+  //   console.log(socket);
 
-    if (socket) {
-      console.log("Setting up listener");
-      socket.on("embedding_status", (newStatus) => {
-        console.log("AAAAAAAAAAA");
-        setStatus(newStatus);
-      });
+  //   if (socket) {
+  //     console.log("Setting up listener");
+  //     socket.on("embedding_status", (newStatus) => {
+  //       console.log("AAAAAAAAAAA");
+  //       setStatus(newStatus);
+  //     });
 
-      return () => {
-        console.log("Cleaning up listener");
-        socket.off("statusUpdate");
-      };
-    }
-  }, [socket]);
+  //     return () => {
+  //       console.log("Cleaning up listener");
+  //       socket.off("statusUpdate");
+  //     };
+  //   }
+  // }, [socket]);
 
   useEffect(() => {
     if (status && fileList) {
@@ -123,6 +124,7 @@ function FilesSection({
         <AddFileModal
           setIsAddModalOpen={setIsAddModalOpen}
           refreshPrivateFiles={refreshFiles}
+          refreshFilesStatus={refreshFilesStatus}
         />
       )}
       {isDeleteModalOpen && (
@@ -131,6 +133,7 @@ function FilesSection({
           file_id={file_to_delete}
           file_name={file_name_to_delete}
           refreshPrivateFiles={refreshFiles}
+          refreshFilesStatus={refreshFilesStatus}
         />
       )}
       {isUpdateModalOpen && (
@@ -140,6 +143,7 @@ function FilesSection({
           file_name={file_name_to_update}
           file_is_public={file_is_public_to_update}
           refreshPrivateFiles={refreshFiles}
+          refreshFilesStatus={refreshFilesStatus}
         />
       )}
       <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
@@ -204,29 +208,16 @@ function FilesSection({
                   <td className="px-6 py-4 whitespace-nowrap">{item.author}</td>
 
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {
-                      //if status is null, print "Done" everywhere
-                      //if status is not null, print the status of the file if it is
-                      //in the status object, else print "Done"
-                      (() => {
-                        const fileStatus = files_status.find(
-                          (s) => s.file_id === item.id
-                        );
-                        if (status === null) {
-                          return fileStatus ? fileStatus.status : "Done";
-                        } else if (item.id === status.file_id) {
-                          if (status.status === "done") {
-                            return "Done";
-                          } else if (status.status === "error") {
-                            return "Error";
-                          } else if (status.status === "pending") {
-                            return "Pending";
-                          }
-                        } else {
-                          return fileStatus ? fileStatus.status : "Done";
-                        }
-                      })()
-                    }
+                    {(() => {
+                      if (files_status.length === 0) {
+                        return "No status available";
+                      }
+
+                      const fileStatus = files_status.find(
+                        (s) => s.file_id === item.id
+                      );
+                      return fileStatus ? fileStatus.status : "Done";
+                    })()}
                   </td>
 
                   <td className="text-right px-6 whitespace-nowrap">

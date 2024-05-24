@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../config.js";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
+import Query from "../layouts/Query";
 
 function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
   // Replace javascript:void(0) paths with your paths
@@ -24,6 +25,15 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
     useState(null);
   const [public_files_init_status, setPublic_files_init_status] =
     useState(null);
+
+  const [selectedSubmenu, setSelectedSubmenu] = useState(submenuNav[0].title);
+
+  const [selectedFileIds, setSelectedFileIds] = useState([]);
+  const [query, setQuery] = useState("");
+
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [isAsked, setIsAsked] = useState(false);
+  const [answer, setAnswer] = useState("");
 
   const refreshPrivateFiles = () => {
     const fetchData = async () => {
@@ -62,6 +72,50 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
       }
     };
 
+    fetchData();
+  };
+
+  const refreshPrivateFilesStatus = () => {
+    const fetchData = async () => {
+      const csrfToken = Cookies.get("csrf_access_token");
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/private_files_status`,
+          {
+            withCredentials: true,
+            headers: {
+              "X-CSRF-TOKEN": csrfToken,
+            },
+          }
+        );
+        setPrivate_files_init_status(response.data);
+      } catch (error) {
+        console.error(error); // Log the error
+        navigate("/login"); // Navigate to login page on error
+      }
+    };
+    fetchData();
+  };
+
+  const refreshPublicFilesStatus = () => {
+    const fetchData = async () => {
+      const csrfToken = Cookies.get("csrf_access_token");
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/public_files_status`,
+          {
+            withCredentials: true,
+            headers: {
+              "X-CSRF-TOKEN": csrfToken,
+            },
+          }
+        );
+        setPublic_files_init_status(response.data);
+      } catch (error) {
+        console.error(error); // Log the error
+        navigate("/login"); // Navigate to login page on error
+      }
+    };
     fetchData();
   };
 
@@ -144,9 +198,6 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
     fetchData();
   }, [navigate]);
 
-  const [selectedSubmenu, setSelectedSubmenu] = useState(submenuNav[0].title);
-  const [selectedFileIds, setSelectedFileIds] = useState([]);
-
   console.log("selected files: ", selectedFileIds);
   console.log("data_files : ", data_files);
   console.log("public_data_files : ", public_data_files);
@@ -180,7 +231,19 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         </nav>
       </header>
 
-      {selectedSubmenu === "Query" && <h1>Test1</h1>}
+      {selectedSubmenu === "Query" && (
+        <Query
+          selectedFiles={selectedFileIds}
+          query={query}
+          setQuery={setQuery}
+          isAnswered={isAnswered}
+          setIsAnswered={setIsAnswered}
+          isAsked={isAsked}
+          setIsAsked={setIsAsked}
+          answer={answer}
+          setAnswer={setAnswer}
+        ></Query>
+      )}
       {selectedSubmenu === "Files" && (
         <FilesSection
           fileList={data_files}
@@ -190,6 +253,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
           avatarMenuOpen={avatarMenuOpen}
           refreshFiles={refreshPrivateFiles}
           files_status={private_files_init_status}
+          refreshFilesStatus={refreshPrivateFilesStatus}
         />
       )}
       {selectedSubmenu === "Community" && (
@@ -201,6 +265,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
           avatarMenuOpen={avatarMenuOpen}
           refreshFiles={refreshPublicFiles}
           files_status={public_files_init_status}
+          refreshFilesStatus={refreshPublicFilesStatus}
         />
       )}
     </>

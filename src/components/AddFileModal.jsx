@@ -9,7 +9,7 @@ import axios from "axios";
 import refreshToken from "../logic/Refresh";
 
 function AddFileModal(
-  { setIsAddModalOpen, refreshPrivateFiles } // Destructuring the props object
+  { setIsAddModalOpen, refreshPrivateFiles, refreshFilesStatus } // Destructuring the props object
 ) {
   const [file, setFile] = useState(null);
   const [isPublic, setIsPublic] = useState(false);
@@ -54,6 +54,7 @@ function AddFileModal(
           progress: undefined,
         });
 
+        refreshFilesStatus();
         refreshPrivateFiles();
       }
     } catch (error) {
