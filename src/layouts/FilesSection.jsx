@@ -89,8 +89,6 @@ function FilesSection({
     }
   };
 
-  console.log("status:", status);
-
   const areAllChecked =
     fileList.length > 0 && selectedFileIds.length === fileList.length;
 

@@ -14,8 +14,6 @@ const LoginPage = () => {
 
     const data = { email, password };
 
-    console.log(JSON.stringify(data));
-
     try {
       const response = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",

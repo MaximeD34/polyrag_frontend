@@ -35,8 +35,6 @@ const Signup = () => {
 
     const data = { email, password, username };
 
-    console.log(JSON.stringify(data));
-
     try {
       const response = await fetch(`${API_BASE_URL}/create_user`, {
         method: "POST",

@@ -19,7 +19,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
 
   const navigate = useNavigate();
 
-  const [data_files, setData_files] = useState(null);
+  const [private_data_files, setData_files] = useState(null);
   const [public_data_files, setPublic_data_files] = useState(null);
   const [private_files_init_status, setPrivate_files_init_status] =
     useState(null);
@@ -31,9 +31,16 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
   const [selectedFileIds, setSelectedFileIds] = useState([]);
   const [query, setQuery] = useState("");
 
+  const [instructions, setInstructions] = useState("");
+
   const [isAnswered, setIsAnswered] = useState(false);
   const [isAsked, setIsAsked] = useState(false);
   const [answer, setAnswer] = useState("");
+
+  const [retrieved_data_files, setRetrieved_data_files] = useState(null);
+
+  console.log("private df : ", private_data_files);
+  console.log("public df : ", public_data_files);
 
   const refreshPrivateFiles = () => {
     const fetchData = async () => {
@@ -150,8 +157,6 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
     fetchData();
   }, [navigate]);
 
-  console.log("init status :", private_files_init_status);
-
   //get private files status
   useEffect(() => {
     const fetchData = async () => {
@@ -198,10 +203,6 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
     fetchData();
   }, [navigate]);
 
-  console.log("selected files: ", selectedFileIds);
-  console.log("data_files : ", data_files);
-  console.log("public_data_files : ", public_data_files);
-
   return (
     <>
       <header className="text-base lg:text-sm">
@@ -236,17 +237,23 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
           selectedFiles={selectedFileIds}
           query={query}
           setQuery={setQuery}
+          instructions={instructions}
+          setInstructions={setInstructions}
           isAnswered={isAnswered}
           setIsAnswered={setIsAnswered}
           isAsked={isAsked}
           setIsAsked={setIsAsked}
           answer={answer}
           setAnswer={setAnswer}
+          private_data_files={private_data_files}
+          public_data_files={public_data_files}
+          retrieved_data_files={retrieved_data_files}
+          setRetrieved_data_files={setRetrieved_data_files}
         ></Query>
       )}
       {selectedSubmenu === "Files" && (
         <FilesSection
-          fileList={data_files}
+          fileList={private_data_files}
           selectedFileIds={selectedFileIds}
           setSelectedFileIds={setSelectedFileIds}
           isPublicMode={false}

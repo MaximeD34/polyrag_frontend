@@ -75,7 +75,7 @@ function AddFileModal(
         });
       } else if (error.response && error.response.status === 401) {
         const csrfToken = await refreshToken();
-        console.log(csrfToken);
+
         if (csrfToken) {
           handleAddFile();
         } else {
