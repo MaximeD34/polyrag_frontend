@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../assets/V2_export.png";
 
 const MainLayout = () => {
   // Inside your component
@@ -8,13 +9,9 @@ const MainLayout = () => {
   const navigation = [];
 
   const Brand = () => (
-    <div className="flex items-center justify-between py-5 md:block">
+    <div className="mt-4 flex items-center justify-between py-5 md:block">
       <a href="/">
-        <img
-          src="https://www.floatui.com/logo-dark.svg"
-          width={140}
-          alt="Float UI logo"
-        />
+        <img src={logo} width={150} alt="Polyrag UI logo" />
       </a>
     </div>
   );

@@ -25,7 +25,7 @@ function Query({
   retrieved_data_files,
   setRetrieved_data_files,
 }) {
-  console.log("retrieved", retrieved_data_files);
+  // console.log("retrieved", retrieved_data_files);
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -92,7 +92,7 @@ function Query({
 
       if (response.status === 200) {
         toast.dismiss();
-        console.log(response.data);
+     
         setIsAnswered(true);
         setAnswer(response.data.response);
 
@@ -120,7 +120,7 @@ function Query({
       console.error(error); // Log the error
 
       if (error.response && error.response.status === 300) {
-        console.log("error 300");
+        // console.log("error 300");
         const error_to_display = error.response.data.msg;
         console.log(error_to_display);
         toast.error(error_to_display, {

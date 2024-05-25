@@ -3,7 +3,7 @@ import AddFileModal from "../components/AddFileModal";
 import DeleteFileModal from "../components/DeleteFileModal";
 import UpdateFileModal from "../components/UpdateFileModal";
 import { useState } from "react";
-// import { SocketContext } from "../App";
+import Loading from "../components/Loading";
 
 function FilesSection({
   fileList, // List of the file to display in the table of this component
@@ -29,25 +29,6 @@ function FilesSection({
   const [file_is_public_to_update, setFileIsPublicToUpdate] = useState(null);
 
   const [status, setStatus] = useState(null);
-  // const socket = useContext(SocketContext);
-
-  // useEffect(() => {
-  //   console.log("useEffect ran", socket);
-  //   console.log(socket);
-
-  //   if (socket) {
-  //     console.log("Setting up listener");
-  //     socket.on("embedding_status", (newStatus) => {
-  //       console.log("AAAAAAAAAAA");
-  //       setStatus(newStatus);
-  //     });
-
-  //     return () => {
-  //       console.log("Cleaning up listener");
-  //       socket.off("statusUpdate");
-  //     };
-  //   }
-  // }, [socket]);
 
   useEffect(() => {
     if (status && fileList) {
@@ -70,6 +51,16 @@ function FilesSection({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      refreshFiles();
+      refreshFilesStatus();
+    }, 1000); // 2000 ms = 2 seconds
+
+    // Clear interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [refreshFiles, refreshFilesStatus]);
 
   const isLargeScreen = windowWidth >= 1024; // Tailwind's lg breakpoint
 
@@ -94,6 +85,12 @@ function FilesSection({
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 md:px-8 pt-7 mb-12">
+      {/* check all the props and show a loading spinner if any is undefined */}
+      {!fileList && <Loading />}
+
+      {!files_status && <Loading />}
+      {!refreshFilesStatus && <Loading />}
+
       <div className="items-start justify-between md:flex">
         <div className="max-w-lg">
           <h3 className="text-gray-800 text-xl font-bold sm:text-2xl">
@@ -145,6 +142,8 @@ function FilesSection({
         />
       )}
       <div className="mt-12 shadow-sm border rounded-lg overflow-x-auto">
+        {!fileList && <Loading />}
+
         <table className="w-full table-auto text-sm text-left">
           <thead className="text-gray-600 font-medium border-b">
             <tr>
@@ -201,7 +200,7 @@ function FilesSection({
                     {item.file_name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {item.is_public ? "Oui" : "Non"} {item.id}
+                    {item.is_public ? "Oui" : "Non"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.author}</td>
 
@@ -222,8 +221,7 @@ function FilesSection({
                     {!isPublicMode && (
                       <>
                         <button
-                          href="javascript:void()"
-                          className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg"
+                          className="py-2 px-3 font-medium text-indigo-600 hover:text-indigo-500 duration-150 hover:bg-gray-50 rounded-lg cursor-pointer"
                           onClick={() => (
                             setFileToUpdate(item.id),
                             setFileNameToUpdate(item.file_name),
@@ -234,8 +232,7 @@ function FilesSection({
                           Edit
                         </button>
                         <button
-                          href="javascript:void()"
-                          className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg"
+                          className="py-2 leading-none px-3 font-medium text-red-600 hover:text-red-500 duration-150 hover:bg-gray-50 rounded-lg cursor-pointer"
                           onClick={() => (
                             setFileToDelete(item.id),
                             setFileNameToDelete(item.file_name),

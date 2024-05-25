@@ -8,9 +8,6 @@ import { useState } from "react";
 import Query from "../layouts/Query";
 
 function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
-  // Replace javascript:void(0) paths with your paths
-  // const navigation = [{ title: "Pro version", path: "javascript:void(0)" }];
-
   const submenuNav = [
     { title: "Query" },
     { title: "Files" },
@@ -39,8 +36,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
 
   const [retrieved_data_files, setRetrieved_data_files] = useState(null);
 
-  console.log("private df : ", private_data_files);
-  console.log("public df : ", public_data_files);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   const refreshPrivateFiles = () => {
     const fetchData = async () => {
@@ -55,7 +51,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         setData_files(response.data);
       } catch (error) {
         console.error(error); // Log the error
-        navigate("/login"); // Navigate to login page on error
+        // navigate("/login"); // Navigate to login page on error
       }
     };
 
@@ -74,8 +70,49 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         });
         setPublic_data_files(response.data);
       } catch (error) {
-        console.error(error); // Log the error
-        navigate("/login"); // Navigate to login page on error
+        //If 401, we refresh the token
+        if (error.response && error.response.status === 401) {
+          const csrfRefreshToken = Cookies.get("csrf_refresh_token");
+          console.log("refresh token: ", csrfRefreshToken);
+          console.log("refreshing token");
+          if (csrfRefreshToken) {
+            try {
+              console.log("trying");
+              const response2 = await fetch(`${API_BASE_URL}/refresh`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "X-CSRF-TOKEN": csrfRefreshToken,
+                },
+              });
+
+              if (response2.ok) {
+                console.log("succeeded");
+                const data = await response2.json();
+           
+
+                // And we retry the original request
+                const response3 = await axios.get(
+                  `${API_BASE_URL}/user_infos`,
+                  {
+                    withCredentials: true,
+                    headers: {
+                      "X-CSRF-TOKEN": Cookies.get("csrf_access_token"),
+                    },
+                  }
+                );
+                setPublic_data_files(response3.data);
+              }
+            } catch (error) {
+              console.error(error); // Log the error
+              // If the error is due to other reasons, we just throw it back to axios
+              setShouldRedirect(true);
+            }
+          }
+        } else {
+          // If the error is due to other reasons, we just throw it back to axios
+          setShouldRedirect(true);
+        }
       }
     };
 
@@ -97,8 +134,49 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         );
         setPrivate_files_init_status(response.data);
       } catch (error) {
-        console.error(error); // Log the error
-        navigate("/login"); // Navigate to login page on error
+        //If 401, we refresh the token
+        if (error.response && error.response.status === 401) {
+          const csrfRefreshToken = Cookies.get("csrf_refresh_token");
+          console.log("refresh token: ", csrfRefreshToken);
+          console.log("refreshing token");
+          if (csrfRefreshToken) {
+            try {
+              console.log("trying");
+              const response2 = await fetch(`${API_BASE_URL}/refresh`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "X-CSRF-TOKEN": csrfRefreshToken,
+                },
+              });
+
+              if (response2.ok) {
+                console.log("succeeded");
+                const data = await response2.json();
+              
+
+                // And we retry the original request
+                const response3 = await axios.get(
+                  `${API_BASE_URL}/user_infos`,
+                  {
+                    withCredentials: true,
+                    headers: {
+                      "X-CSRF-TOKEN": Cookies.get("csrf_access_token"),
+                    },
+                  }
+                );
+                setPrivate_files_init_status(response.data);
+              }
+            } catch (error) {
+              console.error(error); // Log the error
+              // If the error is due to other reasons, we just throw it back to axios
+              setShouldRedirect(true);
+            }
+          }
+        } else {
+          // If the error is due to other reasons, we just throw it back to axios
+          setShouldRedirect(true);
+        }
       }
     };
     fetchData();
@@ -119,8 +197,50 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         );
         setPublic_files_init_status(response.data);
       } catch (error) {
-        console.error(error); // Log the error
-        navigate("/login"); // Navigate to login page on error
+        //If 401, we refresh the token
+        if (error.response && error.response.status === 401) {
+          const csrfRefreshToken = Cookies.get("csrf_refresh_token");
+          console.log("refresh token: ", csrfRefreshToken);
+          console.log("refreshing token");
+          if (csrfRefreshToken) {
+            try {
+              console.log("trying");
+              const response2 = await fetch(`${API_BASE_URL}/refresh`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "X-CSRF-TOKEN": csrfRefreshToken,
+                },
+              });
+
+              if (response2.ok) {
+                console.log("succeeded");
+                const data = await response2.json();
+               
+          
+
+                // And we retry the original request
+                const response3 = await axios.get(
+                  `${API_BASE_URL}/public_files_status`,
+                  {
+                    withCredentials: true,
+                    headers: {
+                      "X-CSRF-TOKEN": Cookies.get("csrf_access_token"),
+                    },
+                  }
+                );
+                setPublic_files_init_status(response3.data);
+              }
+            } catch (error) {
+              console.error(error); // Log the error
+              // If the error is due to other reasons, we just throw it back to axios
+              setShouldRedirect(true);
+            }
+          }
+        } else {
+          // If the error is due to other reasons, we just throw it back to axios
+          setShouldRedirect(true);
+        }
       }
     };
     fetchData();
@@ -149,8 +269,50 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         });
         setPublic_data_files(response.data);
       } catch (error) {
-        console.error(error); // Log the error
-        navigate("/login"); // Navigate to login page on error
+        //If 401, we refresh the token
+        if (error.response && error.response.status === 401) {
+          const csrfRefreshToken = Cookies.get("csrf_refresh_token");
+          console.log("refresh token: ", csrfRefreshToken);
+          console.log("refreshing token");
+          if (csrfRefreshToken) {
+            try {
+              console.log("trying");
+              const response2 = await fetch(`${API_BASE_URL}/refresh`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "X-CSRF-TOKEN": csrfRefreshToken,
+                },
+              });
+
+              if (response2.ok) {
+                console.log("succeeded");
+                const data = await response2.json();
+           
+     
+
+                // And we retry the original request
+                const response3 = await axios.get(
+                  `${API_BASE_URL}/all_public_files`,
+                  {
+                    withCredentials: true,
+                    headers: {
+                      "X-CSRF-TOKEN": Cookies.get("csrf_access_token"),
+                    },
+                  }
+                );
+                setPublic_data_files(response3.data);
+              }
+            } catch (error) {
+              console.error(error); // Log the error
+              // If the error is due to other reasons, we just throw it back to axios
+              setShouldRedirect(true);
+            }
+          }
+        } else {
+          // If the error is due to other reasons, we just throw it back to axios
+          setShouldRedirect(true);
+        }
       }
     };
 
@@ -173,8 +335,49 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         );
         setPrivate_files_init_status(response.data);
       } catch (error) {
-        console.error(error); // Log the error
-        navigate("/login"); // Navigate to login page on error
+        //If 401, we refresh the token
+        if (error.response && error.response.status === 401) {
+          const csrfRefreshToken = Cookies.get("csrf_refresh_token");
+          console.log("refresh token: ", csrfRefreshToken);
+          console.log("refreshing token");
+          if (csrfRefreshToken) {
+            try {
+              console.log("trying");
+              const response2 = await fetch(`${API_BASE_URL}/refresh`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "X-CSRF-TOKEN": csrfRefreshToken,
+                },
+              });
+
+              if (response2.ok) {
+                console.log("succeeded");
+                const data = await response2.json();
+         
+             
+                // And we retry the original request
+                const response3 = await axios.get(
+                  `${API_BASE_URL}/private_files_status`,
+                  {
+                    withCredentials: true,
+                    headers: {
+                      "X-CSRF-TOKEN": Cookies.get("csrf_access_token"),
+                    },
+                  }
+                );
+                setPrivate_files_init_status(response3.data);
+              }
+            } catch (error) {
+              console.error(error); // Log the error
+              // If the error is due to other reasons, we just throw it back to axios
+              setShouldRedirect(true);
+            }
+          }
+        } else {
+          // If the error is due to other reasons, we just throw it back to axios
+          setShouldRedirect(true);
+        }
       }
     };
     fetchData();
@@ -196,8 +399,50 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         );
         setPublic_files_init_status(response.data);
       } catch (error) {
-        console.error(error); // Log the error
-        navigate("/login"); // Navigate to login page on error
+        //If 401, we refresh the token
+        if (error.response && error.response.status === 401) {
+          const csrfRefreshToken = Cookies.get("csrf_refresh_token");
+          console.log("refresh token: ", csrfRefreshToken);
+          console.log("refreshing token");
+          if (csrfRefreshToken) {
+            try {
+              console.log("trying");
+              const response2 = await fetch(`${API_BASE_URL}/refresh`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                  "X-CSRF-TOKEN": csrfRefreshToken,
+                },
+              });
+
+              if (response2.ok) {
+                console.log("succeeded");
+                const data = await response2.json();
+             
+              
+
+                // And we retry the original request
+                const response3 = await axios.get(
+                  `${API_BASE_URL}/public_files_status`,
+                  {
+                    withCredentials: true,
+                    headers: {
+                      "X-CSRF-TOKEN": Cookies.get("csrf_access_token"),
+                    },
+                  }
+                );
+                setPublic_files_init_status(response3.data);
+              }
+            } catch (error) {
+              console.error(error); // Log the error
+              // If the error is due to other reasons, we just throw it back to axios
+              setShouldRedirect(true);
+            }
+          }
+        } else {
+          // If the error is due to other reasons, we just throw it back to axios
+          setShouldRedirect(true);
+        }
       }
     };
     fetchData();
@@ -219,8 +464,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
                   }`}
                 >
                   <a
-                    href="javascript:void(0)"
-                    className="block py-2 px-3 rounded-lg text-gray-700 hover:text-gray-900 hover:bg-gray-100 duration-150"
+                    className="block py-2 px-3 rounded-lg text-gray-700 hover:text-gray-900 hover:bg-gray-100 duration-150 cursor-pointer"
                     onClick={() => setSelectedSubmenu(item.title)}
                   >
                     {item.title}

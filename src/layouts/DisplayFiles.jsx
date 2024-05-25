@@ -31,7 +31,7 @@ function DisplayFiles({ files }) {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.author}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {item.is_public ? "Oui" : "Non"} {item.file_id}
+                    {item.is_public ? "Oui" : "Non"}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {Number((item.score + 1) / 2).toFixed(4)}%

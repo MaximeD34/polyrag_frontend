@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import logo from "../assets/profile.jpg";
 
 // Avtar with darpdown menu
 const AvatarMenue = ({ avatarMenuOpen, setAvatarMenuOpen }) => {
@@ -11,7 +12,6 @@ const AvatarMenue = ({ avatarMenuOpen, setAvatarMenuOpen }) => {
   const navigation = [
     { title: "Dashboard", path: "/dashboard" },
     { title: "Analytics", path: "/analytics" },
-    { title: "Profile", path: "/profile" },
   ];
 
   useEffect(() => {
@@ -40,10 +40,7 @@ const AvatarMenue = ({ avatarMenuOpen, setAvatarMenuOpen }) => {
             setAvatarMenuOpen(newState);
           }}
         >
-          <img
-            src="https://api.uifaces.co/our-content/donated/xZ4wg2Xj.jpg"
-            className="w-full h-full rounded-full"
-          />
+          <img src={logo} className="w-full h-full rounded-full" />
         </button>
       </div>
       <ul

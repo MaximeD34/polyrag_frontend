@@ -1,5 +1,6 @@
 import AvatarMenue from "./AvatarMenue";
 import { useState } from "react";
+import logo from "../assets/V2_export.png";
 
 function Header({ username, avatarMenuOpen, setAvatarMenuOpen }) {
   const [state, setState] = useState(false);
@@ -11,12 +12,7 @@ function Header({ username, avatarMenuOpen, setAvatarMenuOpen }) {
     >
       <div className="flex items-center justify-between py-3 lg:py-5 lg:block">
         <a href="/">
-          <img
-            src="https://www.floatui.com/logo.svg"
-            width={120}
-            height={50}
-            alt="Float UI logo"
-          />
+          <img src={logo} width={120} height={50} alt="Polyrag UI logo" />
         </a>
         <div className="lg:hidden">
           <button
