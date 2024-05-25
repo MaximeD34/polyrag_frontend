@@ -29,6 +29,19 @@ function AddFileModal(
       progress: undefined,
     });
 
+    if (file.size > 9.5 * 1024 * 1024) {
+      toast.dismiss();
+      toast.error("File to large. The limit is 9.5Mo", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     const formData = new FormData();
     formData.append("file", file);
     formData.append("is_public", isPublic);

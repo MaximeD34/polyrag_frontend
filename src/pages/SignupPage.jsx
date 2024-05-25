@@ -48,8 +48,10 @@ const Signup = () => {
         navigate("/login");
       } else {
         setPassword("");
+        setVerifyPassword("");
         setSignupFailed(true);
-        toast.error("Signup failed", {
+
+        toast.error("This email is already taken", {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -60,8 +62,8 @@ const Signup = () => {
         });
       }
     } catch (error) {
-      console.error(error);
       setPassword("");
+      setVerifyPassword("");
       setSignupFailed(true);
     }
   };

@@ -1,4 +1,6 @@
 function DisplayFiles({ files }) {
+  console.log(files);
+
   return (
     <div className="max-w-screen-xl mx-auto ">
       <div className="shadow-sm border rounded-lg overflow-x-auto">
@@ -11,7 +13,7 @@ function DisplayFiles({ files }) {
               </th>
               <th className="py-3 px-6">Page</th>
               <th className="py-3 px-6">Author</th>
-              <th className="py-3 px-6">Publique ?</th>
+
               <th className="py-3 px-6">Score</th>
               <th className="py-3 px-6">Citation</th>
 
@@ -30,9 +32,7 @@ function DisplayFiles({ files }) {
                     {item.page_label}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{item.author}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {item.is_public ? "Oui" : "Non"}
-                  </td>
+
                   <td className="px-6 py-4 whitespace-nowrap">
                     {Number((item.score + 1) / 2).toFixed(4)}%
                   </td>
