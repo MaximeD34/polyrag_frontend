@@ -468,6 +468,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
           public_data_files={public_data_files}
           retrieved_data_files={retrieved_data_files}
           setRetrieved_data_files={setRetrieved_data_files}
+          avatarMenuOpen={avatarMenuOpen}
         ></Query>
       )}
       {selectedSubmenu === "Files" && (

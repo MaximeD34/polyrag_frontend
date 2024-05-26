@@ -24,9 +24,8 @@ function Query({
   public_data_files,
   retrieved_data_files,
   setRetrieved_data_files,
+  avatarMenuOpen,
 }) {
-
-
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => {
@@ -63,17 +62,8 @@ function Query({
       return;
     }
 
-    // Query the selected files
+    console.log(avatarMenuOpen);
 
-    // toast.loading("Querying files...", {
-    //   position: "top-right",
-    //   autoClose: false,
-    //   hideProgressBar: false,
-    //   closeOnClick: true,
-    //   pauseOnHover: true,
-    //   draggable: true,
-    //   progress: undefined,
-    // });
     setIsAsked(true);
 
     const csrfToken = Cookies.get("csrf_access_token");
@@ -92,7 +82,7 @@ function Query({
 
       if (response.status === 200) {
         toast.dismiss();
-     
+
         setIsAnswered(true);
         setAnswer(response.data.response);
 
@@ -120,7 +110,6 @@ function Query({
       console.error(error); // Log the error
 
       if (error.response && error.response.status === 300) {
-      
         const error_to_display = error.response.data.msg;
         console.log(error_to_display);
         toast.error(error_to_display, {
@@ -170,6 +159,10 @@ function Query({
       }
     }
   };
+
+  if (avatarMenuOpen) {
+    return <></>;
+  }
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 md:px-8 pt-7 mb-12">

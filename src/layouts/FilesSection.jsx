@@ -92,6 +92,10 @@ function FilesSection({
     );
   };
 
+  if (avatarMenuOpen) {
+    return <></>;
+  }
+
   return (
     <div className="max-w-screen-xl mx-auto px-4 md:px-8 pt-7 mb-12">
       {/* check all the props and show a loading spinner if any is undefined */}
