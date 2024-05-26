@@ -29,6 +29,20 @@ function AddFileModal(
       progress: undefined,
     });
 
+    if (!file) {
+      toast.dismiss();
+      toast.error("Please select a file", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+
     if (file.size > 9.5 * 1024 * 1024) {
       toast.dismiss();
       toast.error("File to large. The limit is 9.5Mo", {

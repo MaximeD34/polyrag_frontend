@@ -4,6 +4,7 @@ import { API_BASE_URL } from "../../config";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
+import logo from "../assets/V2_export.png";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -75,11 +76,9 @@ const Signup = () => {
       <div className="max-w-sm w-full text-gray-600">
         <div className="text-center">
           {/* Logo */}
-          <img
-            src="https://floatui.com/logo.svg"
-            width={150}
-            className="mx-auto"
-          />
+          <a href="/">
+            <img src={logo} width={150} className="mx-auto" />
+          </a>
           <div className="mt-5 space-y-2">
             <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">
               Create your account
