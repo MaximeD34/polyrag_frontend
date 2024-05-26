@@ -160,7 +160,7 @@ function Query({
     }
   };
 
-  if (avatarMenuOpen) {
+  if (avatarMenuOpen && window.innerWidth <= 1024) {
     return <></>;
   }
 

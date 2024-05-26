@@ -92,7 +92,7 @@ function FilesSection({
     );
   };
 
-  if (avatarMenuOpen) {
+  if (avatarMenuOpen && window.innerWidth <= 1024) {
     return <></>;
   }
 
