@@ -13,7 +13,7 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => {
     // If the request succeeds, we don't have to do anything and just return the response
-    // console.log("succeeded");
+
     return response;
   },
   async (error) => {
@@ -25,11 +25,10 @@ api.interceptors.response.use(
 
       // Try to refresh the token
       const csrfToken = Cookies.get("csrf_refresh_token");
-      console.log("refresh token: ", csrfToken);
-      console.log("refreshing token");
+  
       if (csrfToken) {
         try {
-          console.log("trying");
+          
           const response = await axios.post(`${API_BASE_URL}/refresh`, {
             withCredentials: true,
             headers: {

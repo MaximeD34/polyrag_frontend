@@ -8,6 +8,8 @@ import Loading from "../components/Loading";
 function FilesSection({
   fileList, // List of the file to display in the table of this component
   selectedFileIds, // List of the selected file IDs so the component can communicate them
+  are_all_checked, // Boolean to determine if all the files are checked
+  setAreAllChecked, // Function to set the are_all_checked state
   setSelectedFileIds,
   isPublicMode, // Boolean to determine if the tables show public or private files (just for display purposes)
   avatarMenuOpen, // Boolean to determine if the avatar menu is open or not.
@@ -65,23 +67,30 @@ function FilesSection({
   const isLargeScreen = windowWidth >= 1024; // Tailwind's lg breakpoint
 
   const handleCheckboxChange = (e, file) => {
+    let updatedSelectedFileIds;
     if (e.target.checked) {
-      setSelectedFileIds([...selectedFileIds, file.id]);
+      updatedSelectedFileIds = [...selectedFileIds, file.id];
     } else {
-      setSelectedFileIds(selectedFileIds.filter((id) => id !== file.id));
+      updatedSelectedFileIds = selectedFileIds.filter((id) => id !== file.id);
     }
+    setSelectedFileIds(updatedSelectedFileIds);
+    setAreAllChecked(
+      fileList.length > 0 && updatedSelectedFileIds.length === fileList.length
+    );
   };
 
   const handleSelectAll = (e) => {
+    let updatedSelectedFileIds;
     if (e.target.checked) {
-      setSelectedFileIds(fileList.map((file) => file.id));
+      updatedSelectedFileIds = fileList.map((file) => file.id);
     } else {
-      setSelectedFileIds([]);
+      updatedSelectedFileIds = [];
     }
+    setSelectedFileIds(updatedSelectedFileIds);
+    setAreAllChecked(
+      fileList.length > 0 && updatedSelectedFileIds.length === fileList.length
+    );
   };
-
-  const areAllChecked =
-    fileList.length > 0 && selectedFileIds.length === fileList.length;
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 md:px-8 pt-7 mb-12">
@@ -147,24 +156,8 @@ function FilesSection({
         <table className="w-full table-auto text-sm text-left">
           <thead className="text-gray-600 font-medium border-b">
             <tr>
-              <th className="py-3 px-6 flex items-center gap-x-4">
-                <div className="z-10">
-                  {(!avatarMenuOpen || isLargeScreen) && (
-                    <>
-                      <input
-                        type="checkbox"
-                        id="checkbox-all-items"
-                        className="checkbox-item peer hidden"
-                        checked={areAllChecked}
-                        onChange={handleSelectAll}
-                      />
-                      <label
-                        htmlFor="checkbox-all-items"
-                        className="z-10 relative flex w-5 h-5 bg-white peer-checked:bg-indigo-600 rounded-md border ring-offset-2 ring-indigo-600 duration-150 peer-active:ring cursor-pointer after:absolute after:inset-x-0 after:top-[3px] after:m-auto after:w-1.5 after:h-2.5 after:border-r-2 after:border-b-2 after:border-white after:rotate-45"
-                      ></label>
-                    </>
-                  )}
-                </div>
+              <th className="py-3 px-11 flex items-center gap-x-4">
+                <div className="z-10"></div>
                 File name
               </th>
               <th className="py-3 px-6">Publique ?</th>

@@ -1,5 +1,4 @@
 function DisplayFiles({ files }) {
-  console.log(files);
 
   return (
     <div className="max-w-screen-xl mx-auto ">

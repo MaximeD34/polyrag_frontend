@@ -2,7 +2,7 @@ import AvatarMenue from "./AvatarMenue";
 import { useState } from "react";
 import logo from "../assets/V2_export.png";
 
-function Header({ username, avatarMenuOpen, setAvatarMenuOpen }) {
+function Header({ username, avatarMenuOpen, setAvatarMenuOpen, is_admin }) {
   const [state, setState] = useState(false);
   return (
     <div
@@ -66,6 +66,7 @@ function Header({ username, avatarMenuOpen, setAvatarMenuOpen }) {
           <AvatarMenue
             avatarMenuOpen={avatarMenuOpen}
             setAvatarMenuOpen={setAvatarMenuOpen}
+            is_admin={is_admin}
           />
         </ul>
       </div>

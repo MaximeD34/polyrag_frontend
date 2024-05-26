@@ -5,25 +5,13 @@ import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import LogOutPage from "./pages/LogOutPage";
 import SignupPage from "./pages/SignupPage";
-
-// export const SocketContext = createContext();
-
-// const socket = io(API_BASE_URL, {
-//   transports: ["websocket"],
-//   timeout: 20000,
-// });
+import AdminHistory from "./pages/AdminHistory";
+import History from "./pages/History";
+import AdminAnalytics from "./pages/AdminAnalytics";
+import Analytics from "./pages/Analytics";
 
 const App = () => {
-  // useEffect(() => {
-  //   return () => {
-  //     if (socket.connected) {
-  //       socket.disconnect();
-  //     }
-  //   };
-  // }, []);
-
   return (
-    // <SocketContext.Provider value={socket}>
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -31,11 +19,15 @@ const App = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/logout" element={<LogOutPage />} />
+        <Route path="/admin/history" element={<AdminHistory />} />
+        <Route path="/history" element={<History />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/admin/analytics" element={<AdminAnalytics />} />
+
         {/* 404 route */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
-    // </SocketContext.Provider>
   );
 };
 

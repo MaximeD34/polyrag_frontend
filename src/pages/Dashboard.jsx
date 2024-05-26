@@ -40,7 +40,7 @@ function Dashboard() {
 
           if (csrfRefreshToken) {
             try {
-              console.log("trying");
+             
               const response2 = await fetch(`${API_BASE_URL}/refresh`, {
                 method: "POST",
                 credentials: "include",
@@ -50,11 +50,6 @@ function Dashboard() {
               });
 
               if (response2.ok) {
-                console.log("succeeded");
-                console.log(response2);
-
-                // And we retry the original request
-                console.log(Cookies.get("csrf_access_token"));
 
                 const response3 = await axios.get(
                   `${API_BASE_URL}/user_infos`,
@@ -93,7 +88,7 @@ function Dashboard() {
     return <Loading />;
   }
 
-  const { email, username } = data_user;
+  const { email, username, is_admin } = data_user;
 
   return (
     <div>
@@ -101,6 +96,7 @@ function Dashboard() {
         username={username}
         avatarMenuOpen={avatarMenuOpen}
         setAvatarMenuOpen={setAvatarMenuOpen}
+        is_admin={is_admin}
       />
       <TabsLayout
         email={email}

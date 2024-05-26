@@ -10,7 +10,6 @@ function DeleteFileModal(
   { setIsDeleteModalOpen, file_id, file_name, refreshPrivateFiles } // Destructuring the props object
 ) {
   const handleFileDeletion = async () => {
-    // console.log("Deleting file...");
     toast.loading("Deleting file...", {
       position: "top-right",
       autoClose: 5000,

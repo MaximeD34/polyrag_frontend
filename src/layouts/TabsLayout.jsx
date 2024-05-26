@@ -38,6 +38,9 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
 
   const [shouldRedirect, setShouldRedirect] = useState(false);
 
+  const [private_are_all_checked, setPrivateAreAllChecked] = useState(false);
+  const [public_are_all_checked, setPublicAreAllChecked] = useState(false);
+
   const refreshPrivateFiles = () => {
     const fetchData = async () => {
       const csrfToken = Cookies.get("csrf_access_token");
@@ -73,11 +76,9 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         //If 401, we refresh the token
         if (error.response && error.response.status === 401) {
           const csrfRefreshToken = Cookies.get("csrf_refresh_token");
-          console.log("refresh token: ", csrfRefreshToken);
-          console.log("refreshing token");
+
           if (csrfRefreshToken) {
             try {
-              console.log("trying");
               const response2 = await fetch(`${API_BASE_URL}/refresh`, {
                 method: "POST",
                 credentials: "include",
@@ -87,9 +88,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
               });
 
               if (response2.ok) {
-                console.log("succeeded");
                 const data = await response2.json();
-           
 
                 // And we retry the original request
                 const response3 = await axios.get(
@@ -137,11 +136,9 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         //If 401, we refresh the token
         if (error.response && error.response.status === 401) {
           const csrfRefreshToken = Cookies.get("csrf_refresh_token");
-          console.log("refresh token: ", csrfRefreshToken);
-          console.log("refreshing token");
+
           if (csrfRefreshToken) {
             try {
-              console.log("trying");
               const response2 = await fetch(`${API_BASE_URL}/refresh`, {
                 method: "POST",
                 credentials: "include",
@@ -151,9 +148,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
               });
 
               if (response2.ok) {
-                console.log("succeeded");
                 const data = await response2.json();
-              
 
                 // And we retry the original request
                 const response3 = await axios.get(
@@ -200,11 +195,9 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         //If 401, we refresh the token
         if (error.response && error.response.status === 401) {
           const csrfRefreshToken = Cookies.get("csrf_refresh_token");
-          console.log("refresh token: ", csrfRefreshToken);
-          console.log("refreshing token");
+
           if (csrfRefreshToken) {
             try {
-              console.log("trying");
               const response2 = await fetch(`${API_BASE_URL}/refresh`, {
                 method: "POST",
                 credentials: "include",
@@ -214,10 +207,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
               });
 
               if (response2.ok) {
-                console.log("succeeded");
                 const data = await response2.json();
-               
-          
 
                 // And we retry the original request
                 const response3 = await axios.get(
@@ -272,11 +262,9 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         //If 401, we refresh the token
         if (error.response && error.response.status === 401) {
           const csrfRefreshToken = Cookies.get("csrf_refresh_token");
-          console.log("refresh token: ", csrfRefreshToken);
-          console.log("refreshing token");
+
           if (csrfRefreshToken) {
             try {
-              console.log("trying");
               const response2 = await fetch(`${API_BASE_URL}/refresh`, {
                 method: "POST",
                 credentials: "include",
@@ -286,10 +274,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
               });
 
               if (response2.ok) {
-                console.log("succeeded");
                 const data = await response2.json();
-           
-     
 
                 // And we retry the original request
                 const response3 = await axios.get(
@@ -338,11 +323,9 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         //If 401, we refresh the token
         if (error.response && error.response.status === 401) {
           const csrfRefreshToken = Cookies.get("csrf_refresh_token");
-          console.log("refresh token: ", csrfRefreshToken);
-          console.log("refreshing token");
+
           if (csrfRefreshToken) {
             try {
-              console.log("trying");
               const response2 = await fetch(`${API_BASE_URL}/refresh`, {
                 method: "POST",
                 credentials: "include",
@@ -352,10 +335,8 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
               });
 
               if (response2.ok) {
-                console.log("succeeded");
                 const data = await response2.json();
-         
-             
+
                 // And we retry the original request
                 const response3 = await axios.get(
                   `${API_BASE_URL}/private_files_status`,
@@ -402,11 +383,9 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
         //If 401, we refresh the token
         if (error.response && error.response.status === 401) {
           const csrfRefreshToken = Cookies.get("csrf_refresh_token");
-          console.log("refresh token: ", csrfRefreshToken);
-          console.log("refreshing token");
+
           if (csrfRefreshToken) {
             try {
-              console.log("trying");
               const response2 = await fetch(`${API_BASE_URL}/refresh`, {
                 method: "POST",
                 credentials: "include",
@@ -416,11 +395,7 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
               });
 
               if (response2.ok) {
-                console.log("succeeded");
                 const data = await response2.json();
-             
-              
-
                 // And we retry the original request
                 const response3 = await axios.get(
                   `${API_BASE_URL}/public_files_status`,
@@ -505,6 +480,8 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
           refreshFiles={refreshPrivateFiles}
           files_status={private_files_init_status}
           refreshFilesStatus={refreshPrivateFilesStatus}
+          are_all_checked={private_are_all_checked}
+          setAreAllChecked={setPrivateAreAllChecked}
         />
       )}
       {selectedSubmenu === "Community" && (
@@ -517,6 +494,8 @@ function TabsLayout({ email, username, avatarMenuOpen, setAvatarMenuOpen }) {
           refreshFiles={refreshPublicFiles}
           files_status={public_files_init_status}
           refreshFilesStatus={refreshPublicFilesStatus}
+          are_all_checked={public_are_all_checked}
+          setAreAllChecked={setPublicAreAllChecked}
         />
       )}
     </>

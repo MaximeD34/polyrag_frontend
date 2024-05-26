@@ -4,15 +4,23 @@ import { Link } from "react-router-dom";
 import logo from "../assets/profile.jpg";
 
 // Avtar with darpdown menu
-const AvatarMenue = ({ avatarMenuOpen, setAvatarMenuOpen }) => {
+const AvatarMenue = ({ avatarMenuOpen, setAvatarMenuOpen, is_admin }) => {
   const [state, setState] = useState(false);
   const profileRef = useRef();
   const navigate = useNavigate();
 
   const navigation = [
     { title: "Dashboard", path: "/dashboard" },
+    { title: "History", path: "/history" },
     { title: "Analytics", path: "/analytics" },
   ];
+  if (is_admin) {
+    navigation.push({ title: "All histories (admin)", path: "/admin/history" });
+    navigation.push({
+      title: "All users analytics (admin)",
+      path: "/admin/analytics",
+    });
+  }
 
   useEffect(() => {
     const handleDropDown = (e) => {

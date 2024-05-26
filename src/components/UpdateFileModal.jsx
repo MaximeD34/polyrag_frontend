@@ -21,7 +21,6 @@ function UpdateFileModal(
   const [new_file_is_public, setNew_file_is_public] = useState(file_is_public);
 
   const handleFileUpdate = async () => {
-    // console.log("Updating file...");
     toast.loading("Updating file...", {
       position: "top-right",
       autoClose: 5000,
